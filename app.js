@@ -44,10 +44,9 @@ const YOUTUBE_MEDIA = {
   journalism2: [{ id:"lPQAl4Bwrjo", ratio:"9 / 16", label:"Interview Average Rob" }],
   sport1: [
     { id:"8c1Aws0_E1I", ratio:"9 / 16", label:"Sport Content 1" },
-    { tiktokId:"7646470778187222304", ratio:"9 / 16", label:"20 km de Bruxelles — TikTok" }
+    { id:"tUw0qhUbhiE", ratio:"16 / 9", label:"Sport Content 3" }
   ],
-  school1: [{ id:"RlB6fXD5CFQ", ratio:"9 / 16", label:"School Content vlog" }],
-  w2w: [{ id:"Qc660Zu_hZI", ratio:"16 / 9", label:"Women2Women — Boston" }]
+  school1: [{ id:"RlB6fXD5CFQ", ratio:"9 / 16", label:"School Content vlog" }]
 };
 
 
@@ -752,10 +751,8 @@ async function renderContentCarousel(box, metaItems, sectionKey){
     }
   }
   // Add hosted videos to the carousel while preserving each video's native orientation.
-  for(const hosted of (YOUTUBE_MEDIA[sectionKey]||[])){
-    if(hosted.tiktokId){
-      if(!entries.some(entry=>entry.tiktokId===hosted.tiktokId)) entries.push({tiktokId:hosted.tiktokId,ratio:hosted.ratio,label:hosted.label,meta:{format:"Original",customRatio:""}});
-    }else if(!entries.some(entry=>entry.youtubeId===hosted.id)) entries.push({youtubeId:hosted.id,ratio:hosted.ratio,label:hosted.label,meta:{format:"Original",customRatio:""}});
+  for(const yt of (YOUTUBE_MEDIA[sectionKey]||[])){
+    if(!entries.some(entry=>entry.youtubeId===yt.id)) entries.push({youtubeId:yt.id,ratio:yt.ratio,label:yt.label,meta:{format:"Original",customRatio:""}});
   }
   box.innerHTML="";
   box.classList.add("content-carousel-host","media-managed-host");
@@ -775,14 +772,12 @@ async function renderContentCarousel(box, metaItems, sectionKey){
   function makeMedia(entry,i){
     const frame=document.createElement("div");frame.className="content-carousel-slide";frame.dataset.index=String(i);
     let src=entry.src;if(entry.file&&!entry.file.legacy)src=URL.createObjectURL(entry.file.blob||entry.file);
-    const applyRatio=(el,w,h)=>{if(!w||!h)return;const ratio=w/h;const stageH=Math.max(220,Math.min(460,window.innerWidth<600?300:420));let height=stageH,width=height*ratio;const maxWidth=Math.max(180,Math.min(window.innerWidth*.78,900));if(width>maxWidth){width=maxWidth;height=width/ratio;}frame.style.width=`${Math.round(width)}px`;frame.style.height=`${Math.round(height)}px`;};
-    if(entry.youtubeId||entry.tiktokId){
-      const ratio=entry.ratio||"16 / 9"; const parts=ratio.split("/").map(v=>Number(v.trim())); const rw=parts[0]||16,rh=parts[1]||9;
-      const stageH=Math.max(220,Math.min(460,window.innerWidth<600?300:420)); let height=stageH,width=height*rw/rh;
-      const maxWidth=Math.max(180,Math.min(window.innerWidth*.78,900)); if(width>maxWidth){width=maxWidth;height=width/(rw/rh);}
-      frame.style.width=`${Math.round(width)}px`; frame.style.height=`${Math.round(height)}px`; frame.classList.add(entry.tiktokId?"content-carousel-tiktok":"content-carousel-youtube");
-      const iframe=document.createElement("iframe"); iframe.className=entry.tiktokId?"tiktok-embed-frame":"youtube-embed-frame";
-      iframe.src=entry.tiktokId?`https://www.tiktok.com/player/v1/${entry.tiktokId}?controls=1&description=1`:`https://www.youtube-nocookie.com/embed/${entry.youtubeId}?playsinline=1&rel=0`; iframe.title=entry.label||"Video"; iframe.loading="lazy";
+    const applyRatio=(el,w,h)=>{if(!w||!h)return;const height=Math.max(240,Math.min(460,window.innerWidth<600?340:440));const width=height*9/16;frame.style.width=`${Math.round(width)}px`;frame.style.height=`${Math.round(height)}px`;frame.style.aspectRatio="9 / 16";};
+    if(entry.youtubeId){
+      const stageH=Math.max(240,Math.min(460,window.innerWidth<600?340:440)); const height=stageH,width=height*9/16;
+      frame.style.width=`${Math.round(width)}px`; frame.style.height=`${Math.round(height)}px`; frame.style.aspectRatio="9 / 16"; frame.classList.add("content-carousel-youtube");
+      const iframe=document.createElement("iframe"); iframe.className="youtube-embed-frame";
+      iframe.src=`https://www.youtube-nocookie.com/embed/${entry.youtubeId}?playsinline=1&rel=0`; iframe.title=entry.label||"YouTube video"; iframe.loading="lazy";
       iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; iframe.allowFullscreen=true; iframe.referrerPolicy="strict-origin-when-cross-origin";
       frame.appendChild(iframe);
     }
