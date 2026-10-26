@@ -43,8 +43,8 @@ const YOUTUBE_MEDIA = {
   journalism1: [{ id:"SLS5mmtpwQY", ratio:"16 / 9", label:"Interview Benitow" }],
   journalism2: [{ id:"lPQAl4Bwrjo", ratio:"9 / 16", label:"Interview Average Rob" }],
   sport1: [
-    { id:"8c1Aws0_E1I", ratio:"9 / 16", label:"Sport Content 1" },
-    { id:"tUw0qhUbhiE", ratio:"16 / 9", label:"Sport Content 3" }
+    { id:"ZQB1K4hWO2s", ratio:"9 / 16", label:"Sport Content — YouTube Short" },
+    { tiktokId:"7646470778187222304", ratio:"9 / 16", label:"20 km de Bruxelles — TikTok" }
   ],
   school1: [{ id:"RlB6fXD5CFQ", ratio:"9 / 16", label:"School Content vlog" }]
 };
@@ -773,11 +773,13 @@ async function renderContentCarousel(box, metaItems, sectionKey){
     const frame=document.createElement("div");frame.className="content-carousel-slide";frame.dataset.index=String(i);
     let src=entry.src;if(entry.file&&!entry.file.legacy)src=URL.createObjectURL(entry.file.blob||entry.file);
     const applyRatio=(el,w,h)=>{if(!w||!h)return;const height=Math.max(240,Math.min(460,window.innerWidth<600?340:440));const width=height*9/16;frame.style.width=`${Math.round(width)}px`;frame.style.height=`${Math.round(height)}px`;frame.style.aspectRatio="9 / 16";};
-    if(entry.youtubeId){
+    if(entry.youtubeId || entry.tiktokId){
       const stageH=Math.max(240,Math.min(460,window.innerWidth<600?340:440)); const height=stageH,width=height*9/16;
-      frame.style.width=`${Math.round(width)}px`; frame.style.height=`${Math.round(height)}px`; frame.style.aspectRatio="9 / 16"; frame.classList.add("content-carousel-youtube");
+      frame.style.width=`${Math.round(width)}px`; frame.style.height=`${Math.round(height)}px`; frame.style.aspectRatio="9 / 16";
+      frame.classList.add(entry.tiktokId?"content-carousel-tiktok":"content-carousel-youtube");
       const iframe=document.createElement("iframe"); iframe.className="youtube-embed-frame";
-      iframe.src=`https://www.youtube-nocookie.com/embed/${entry.youtubeId}?playsinline=1&rel=0`; iframe.title=entry.label||"YouTube video"; iframe.loading="lazy";
+      iframe.src=entry.tiktokId?`https://www.tiktok.com/embed/v2/${entry.tiktokId}`:`https://www.youtube-nocookie.com/embed/${entry.youtubeId}?playsinline=1&rel=0`;
+      iframe.title=entry.label||"Embedded video"; iframe.loading="lazy";
       iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; iframe.allowFullscreen=true; iframe.referrerPolicy="strict-origin-when-cross-origin";
       frame.appendChild(iframe);
     }

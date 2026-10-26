@@ -3705,3 +3705,80 @@ main, section, article, .section-head, .work-grid, .work-item, .experience-card,
 .hero-main-row .hero-visual{padding:0!important;margin:0!important;}
 @media(max-width:850px){.hero-main-row{column-gap:24px!important;}}
 @media(max-width:520px){.hero-main-row{grid-template-columns:minmax(0,1fr) 100px!important;column-gap:22px!important;}.hero-main-row .hero-visual,.hero-main-row .hero-visual .image-placeholder{width:100px!important;max-width:100px!important;min-width:100px!important;}.hero-text-block h1{letter-spacing:-.045em!important;}}
+
+
+/* FINAL CONTENT POLISH — October 2026 */
+/* Event experience detail rows: align their labels and descriptions consistently. */
+.work-item[data-type="event"] > .work-caption,
+.work-item[data-type="event"] > .work-caption > span,
+.work-item[data-type="event"] > .work-caption > p,
+.work-item[data-type="event"] > .conception-meta {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+.work-item[data-type="event"] > .work-caption {
+  align-items: start !important;
+  row-gap: 10px !important;
+}
+.work-item[data-type="event"] > .work-caption > span { margin: 0 !important; }
+.work-item[data-type="event"] > .work-caption > p,
+.work-item[data-type="event"] > .work-caption > .conception-meta {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  overflow-wrap: anywhere;
+}
+/* Average Rob: iframe and wrapper must share one exact 9:16 box, with no overflow. */
+#work .work-item.average-rob-interview > .image-placeholder {
+  position: relative !important;
+  display: block !important;
+  width: min(100%, 260px) !important;
+  max-width: 260px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 9 / 16 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+#work .work-item.average-rob-interview > .image-placeholder .youtube-media-item,
+#work .work-item.average-rob-interview > .image-placeholder .youtube-embed-frame {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  aspect-ratio: auto !important;
+  border: 0 !important;
+  box-sizing: border-box !important;
+}
+/* Content descriptions run the full available width; avoid mid-line clipping. */
+#work .work-item.content-card[data-content-category="sport"] > .work-caption,
+#work .work-item.content-card[data-content-category="school"] > .work-caption {
+  width: 100% !important;
+  max-width: none !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+#work .work-item.content-card[data-content-category="sport"] > .work-caption p,
+#work .work-item.content-card[data-content-category="school"] > .work-caption p {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-overflow: clip !important;
+  line-height: 1.7 !important;
+}
+/* TikTok and YouTube players stay inside the same portrait carousel frame. */
+#work .content-carousel-tiktok,
+#work .content-carousel-youtube { position: relative !important; overflow: hidden !important; }
+#work .content-carousel-tiktok .youtube-embed-frame,
+#work .content-carousel-youtube .youtube-embed-frame {
+  position: absolute !important; inset: 0 !important;
+  width: 100% !important; height: 100% !important; border: 0 !important;
+}
